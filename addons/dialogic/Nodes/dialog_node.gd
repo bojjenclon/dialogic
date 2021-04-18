@@ -415,7 +415,7 @@ func event_handler(event: Dictionary):
 	
 	dprint('[D] Current Event: ', event)
 	match event:
-		{'text', 'character', 'portrait'}:
+		{'dialogic_event_16', ..}, {'text', 'character', 'portrait'}:
 			emit_signal("event_start", "text", event)
 			show_dialog()
 			finished = false
@@ -423,7 +423,7 @@ func event_handler(event: Dictionary):
 			update_name(character_data)
 			grab_portrait_focus(character_data, event)
 			update_text(event['text'])
-		{'question', 'question_id', 'options', ..}:
+		{'dialogic_event_13', ..}, {'question', 'question_id', 'options', ..}:
 			emit_signal("event_start", "question", event)
 			show_dialog()
 			finished = false
@@ -438,14 +438,14 @@ func event_handler(event: Dictionary):
 			if event.has('options'):
 				for o in event['options']:
 					add_choice_button(o)
-		{'choice', 'question_id'}:
+		{'dialogic_event_8', ..}, {'choice', 'question_id'}:
 			emit_signal("event_start", "choice", event)
 			for q in questions:
 				if q['question_id'] == event['question_id']:
 					if q['answered']:
 						# If the option is for an answered question, skip to the end of it.
 						_load_event_at_index(q['end_id'])
-		{'action', ..}:
+		{'dialogic_event_6', ..}, {'dialogic_event_7', ..}, {'action', ..}:
 			emit_signal("event_start", "action", event)
 			if event['action'] == 'leaveall':
 				if event['character'] == '[All]':
@@ -471,9 +471,7 @@ func event_handler(event: Dictionary):
 						$Portraits.add_child(p)
 						p.fade_in()
 				_load_next_event()
-		{'scene'}:
-			get_tree().change_scene(event['scene'])
-		{'background'}:
+		{'dialogic_event_3', ..}, {'background'}:
 			emit_signal("event_start", "background", event)
 			var background = get_node_or_null('Background')
 			if event['background'] == '' and background != null:
@@ -504,7 +502,7 @@ func event_handler(event: Dictionary):
 				elif (event['background'] != ''):
 					background.texture = load(event['background'])
 			_load_next_event()
-		{'audio'}, {'audio', 'file', ..}:
+		{'dialogic_event_0', ..}, {'audio'}, {'audio', 'file', ..}:
 			emit_signal("event_start", "audio", event)
 			if event['audio'] == 'play' and 'file' in event.keys() and not event['file'].empty():
 				var audio = get_node_or_null('AudioEvent')
@@ -525,41 +523,41 @@ func event_handler(event: Dictionary):
 					audio.stop()
 					audio.queue_free()
 			_load_next_event()
-		{'background-music'}, {'background-music', 'file',..}:
+		{'dialogic_event_1', ..}, {'background-music'}, {'background-music', 'file',..}:
 			emit_signal("event_start", "background-music", event)
 			if event['background-music'] == 'play' and 'file' in event.keys() and not event['file'].empty():
 				$FX/BackgroundMusic.crossfade_to(event['file'], event.get('audio_bus', 'Master'), event.get('volume', 0), event.get('fade_length', 1))
 			else:
 				$FX/BackgroundMusic.fade_out(event.get('fade_length', 1))
 			_load_next_event()
-		{'endbranch', ..}:
+		{'dialogic_event_11', ..}, {'endbranch', ..}:
 			emit_signal("event_start", "endbranch", event)
 			_load_next_event()
-		{'change_scene'}:
+		{'dialogic_event_4', ..}, {'change_scene', ..}:
 			get_tree().change_scene(event['change_scene'])
-		{'emit_signal', ..}:
+		{'dialogic_event_10', ..}, {'emit_signal', ..}:
 			dprint('[!] Emitting signal: dialogic_signal(', event['emit_signal'], ')')
 			emit_signal("dialogic_signal", event['emit_signal'])
 			_load_next_event()
-		{'close_dialog', ..}:
+		{'dialogic_event_9', ..}, {'close_dialog', ..}:
 			emit_signal("event_start", "close_dialog", event)
 			var transition_duration = 1.0
 			if event.has('transition_duration'):
 				transition_duration = event['transition_duration']
 			close_dialog_event(transition_duration)
-		{'set_theme'}:
+		{'dialogic_event_14', ..}, {'set_theme'}:
 			emit_signal("event_start", "set_theme", event)
 			if event['set_theme'] != '':
 				current_theme = load_theme(event['set_theme'])
 			_load_next_event()
-		{'wait_seconds'}:
+		{'dialogic_event_17', ..}, {'wait_seconds'}:
 			emit_signal("event_start", "wait", event)
 			wait_seconds(event['wait_seconds'])
 			waiting = true
-		{'change_timeline'}:
+		{'dialogic_event_5', ..}, {'change_timeline'}:
 			dialog_script = set_current_dialog(event['change_timeline'])
 			_init_dialog()
-		{'condition', 'definition', 'value', 'question_id', ..}:
+		{'dialogic_event_17', ..}, {'condition', 'definition', 'value', 'question_id', ..}:
 			# Treating this conditional as an option on a regular question event
 			var def_value = null
 			var current_question = questions[event['question_id']]
@@ -577,14 +575,14 @@ func event_handler(event: Dictionary):
 			else:
 				# condition met, entering branch
 				_load_next_event()
-		{'set_value', 'definition', ..}:
+		{'dialogic_event_15', ..}, {'set_value', 'definition', ..}:
 			emit_signal("event_start", "set_value", event)
 			var operation = '='
 			if 'operation' in event and not event['operation'].empty():
 				operation = event["operation"]
 			DialogicSingleton.set_variable_from_id(event['definition'], event['set_value'], operation)
 			_load_next_event()
-		{'call_node', ..}:
+		{'dialogic_event_2', ..}, {'call_node', ..}:
 			dprint('[!] Call Node signal: dialogic_signal(call_node) ', var2str(event['call_node']))
 			emit_signal("event_start", "call_node", event)
 			$TextBubble.visible = false

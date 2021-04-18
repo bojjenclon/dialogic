@@ -5,6 +5,7 @@ var editor_reference
 
 # This is the information of this event and it will get parsed and saved to the JSON file.
 var event_data = {
+	'event_id': 'dialogic_event_17',
 	'wait_seconds': 0
 }
 
