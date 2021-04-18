@@ -6,7 +6,7 @@ var character_selected = ''
 
 # This is the information of this event and it will get parsed and saved to the JSON file.
 var event_data = {
-	'event_id': 'dialogic_event_7',
+	'dialogic_event_7': true,
 	'action': 'leaveall',
 	'character': '[All]',
 }

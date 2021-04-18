@@ -6,7 +6,7 @@ var editorPopup
 
 
 var event_data = {
-	'event_id': 'dialogic_event_11',
+	'dialogic_event_11': true,
 	'endbranch': ''
 }
 

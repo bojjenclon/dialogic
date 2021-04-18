@@ -7,7 +7,7 @@ var editorPopup
 
 # This is the information of this event and it will get parsed and saved to the JSON file.
 var event_data = {
-	'event_id': 'dialogic_event_13',
+	'dialogic_event_13': true,
 	'question': '',
 	'options': [],
 	'character': '',

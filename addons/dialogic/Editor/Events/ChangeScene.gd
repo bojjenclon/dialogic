@@ -5,7 +5,7 @@ var editor_reference
 var editorPopup
 
 var event_data = {
-	'event_id': 'dialogic_event_4',
+	'dialogic_event_4': true,
 	'change_scene': ''
 }
 

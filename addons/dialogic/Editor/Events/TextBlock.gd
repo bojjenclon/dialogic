@@ -8,7 +8,7 @@ onready var toggler = get_node("PanelContainer/VBoxContainer/Header/VisibleToggl
 
 # This is the information of this event and it will get parsed and saved to the JSON file.
 var event_data = {
-	'event_id': 'dialogic_event_16',
+	'dialogic_event_16': true,
 	'character': '',
 	'text': '',
 	'portrait': '',
